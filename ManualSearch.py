@@ -8,6 +8,7 @@ import pydotplus
 from IPython.display import display
 from rdflib.tools.rdf2dot import rdf2dot
 import os
+import webbrowser
 
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 master = Tk()
@@ -43,6 +44,12 @@ def visualize():
     rdf2dot(j, stream, opts={display})
     dg = pydotplus.graph_from_dot_data(stream.getvalue())
     dg.write_svg("test" + str(c) + ".svg")
+    url = "C:/Users/Myles/Documents/GitHub/290/test" +str(c) +".svg"
+    webbrowser.register('chrome',
+                    None,
+                    webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
+    webbrowser.get('chrome').open(url)
+
 
 
 def tripleCount():
@@ -54,17 +61,15 @@ output = Label(master, text="Simulation Visualizer")
 output.pack()
 
 button3 = Button(master, text="Select File", command=selectFile)
-
 button3.pack()
-
-button = Button(master, text="Graph Data", command=visualize)
-
-button.pack()
-
-button2 = Button(master, text="Quit", command=closeWindows)
 
 button4 = Button(master, text="Triple Count", command=tripleCount)
 button4.pack()
+
+button = Button(master, text="Graph Data", command=visualize)
+button.pack()
+
+button2 = Button(master, text="Quit", command=closeWindows)
 button2.pack()
 
 mainloop()
