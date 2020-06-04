@@ -46,11 +46,11 @@ def visualize():
         if not j.__contains__((None, None, s)):
             j.add((s, p, o))
 
-    #add any triples from g where the current objects in j are subjects
-    for s, p, o in j.triples((None, None, None)):
-            for q, w, e in g.triples((o, None, None)):
-                if s is not e:
-                    j.add((q, w, e))
+    # #add any triples from g where the current objects in j are subjects
+    # for s, p, o in j.triples((None, None, None)):
+    #         for q, w, e in g.triples((o, None, None)):
+    #             if s is not e:
+    #                 j.add((q, w, e))
 
     #creates the graph visually and saves it as an svg file
     stream = io.StringIO()
@@ -68,7 +68,7 @@ def visualize():
 
 def subjectNumber():
     global c
-    c = tkinter.simpledialog.askinteger("Data","Which subject do you want to tree")
+    c = tkinter.simpledialog.askinteger("Data","Which subject do you want select")
 
 
 output = Label(master, text="Simulation Visualizer")
