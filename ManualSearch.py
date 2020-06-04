@@ -9,6 +9,7 @@ from IPython.display import display
 from rdflib.tools.rdf2dot import rdf2dot
 import os
 import webbrowser
+import pathlib
 os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 #Generate GUI window
@@ -26,6 +27,7 @@ def selectFile():
 
 #exit the application
 def closeWindows():
+    os.system("TASKKILL /F /IM ManualSearch.exe")
     exit()
 
 
@@ -46,19 +48,15 @@ def visualize():
         if not j.__contains__((None, None, s)):
             j.add((s, p, o))
 
-    # #add any triples from g where the current objects in j are subjects
-    # for s, p, o in j.triples((None, None, None)):
-    #         for q, w, e in g.triples((o, None, None)):
-    #             if s is not e:
-    #                 j.add((q, w, e))
-
     #creates the graph visually and saves it as an svg file
     stream = io.StringIO()
     rdf2dot(j, stream, opts={display})
     dg = pydotplus.graph_from_dot_data(stream.getvalue())
-    dg.write_svg("graph" + str(c) + ".svg")
+    dg.write_svg("graph"+str(c)+".svg")
     #once complete the graph is automatically opened in chrome
-    url = "C:/Users/Myles/Documents/GitHub/290/graph" +str(c) +".svg"
+
+    url = str(pathlib.Path().absolute())+"/graph" +str(c) +".svg"
+
     webbrowser.register('chrome',
                     None,
                     webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
