@@ -21,9 +21,13 @@ j = Graph()
 
 #Opens file explorer so user can select turtle file to parse from any path. Parses the entire file into a holder graph g
 def selectFile():
-    master.fileName = filedialog.askopenfilename(filetypes=(("turtle files", ".ttl"), ("All files", "*")))
-    g.parse(master.fileName, format="turtle")
-    print("done parsing")
+    try:
+        master.fileName = filedialog.askopenfilename(filetypes=(("turtle files", ".ttl"), ("All files", "*")))
+        print("Parsing file please wait")
+        g.parse(master.fileName, format="turtle")
+        print("done parsing")
+    except:
+        print("Invalid file selection")
 
 #exit the application
 def closeWindows():
@@ -32,36 +36,38 @@ def closeWindows():
 
 
 def visualize():
-    j=Graph()
-    l=0
-    for s in g.subjects():
-        if l == c:
-            selectedR = s
-            break
-        l+=1
-    #add all triples in g that have the selected resource as their subject and add to j
-    for s, p, o in g.triples((selectedR, None, None)):
-        j.add((s, p, o))
-    #add all triples in g that have the selected resource as their object and add to j
-    for s, p, o in g.triples((None, None,selectedR)):
-        #check if  this relationship is already detailed in j
-        if not j.__contains__((None, None, s)):
+    try:
+        j=Graph()
+        l=0
+        for s in g.subjects():
+            if l == c:
+                selectedR = s
+                break
+            l+=1
+        #add all triples in g that have the selected resource as their subject and add to j
+        for s, p, o in g.triples((selectedR, None, None)):
             j.add((s, p, o))
+        #add all triples in g that have the selected resource as their object and add to j
+        for s, p, o in g.triples((None, None,selectedR)):
+            #check if  this relationship is already detailed in j
+            if not j.__contains__((None, None, s)):
+                j.add((s, p, o))
 
-    #creates the graph visually and saves it as an svg file
-    stream = io.StringIO()
-    rdf2dot(j, stream, opts={display})
-    dg = pydotplus.graph_from_dot_data(stream.getvalue())
-    dg.write_svg("graph"+str(c)+".svg")
-    #once complete the graph is automatically opened in chrome
+        #creates the graph visually and saves it as an svg file
+        stream = io.StringIO()
+        rdf2dot(j, stream, opts={display})
+        dg = pydotplus.graph_from_dot_data(stream.getvalue())
+        dg.write_svg("graph"+str(c)+".svg")
+        #once complete the graph is automatically opened in chrome
 
-    url = str(pathlib.Path().absolute())+"/graph" +str(c) +".svg"
+        url = str(pathlib.Path().absolute())+"/graph" +str(c) +".svg"
 
-    webbrowser.register('chrome',
-                    None,
-                    webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
-    webbrowser.get('chrome').open(url)
-
+        webbrowser.register('chrome',
+                        None,
+                        webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
+        webbrowser.get('chrome').open(url)
+    except:
+        print("unable to create graph")
 
 
 def subjectNumber():
@@ -75,7 +81,7 @@ output.pack()
 button3 = Button(master, text="Select File", command=selectFile)
 button3.pack()
 
-button4 = Button(master, text="subjectNumber", command=subjectNumber)
+button4 = Button(master, text="subject Number", command=subjectNumber)
 button4.pack()
 
 button = Button(master, text="Graph Data", command=visualize)
