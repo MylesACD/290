@@ -27,7 +27,7 @@ def selectFile():
         g.parse(master.fileName, format="turtle")
         print("done parsing")
     except:
-        print("Invalid file selection")
+        print("Invalid file selection, parsing incomplete")
 
 #exit the application
 def closeWindows():
@@ -39,6 +39,7 @@ def visualize():
     try:
         j=Graph()
         l=0
+        #iterate through g until the subject number specified by user is found
         for s in g.subjects():
             if l == c:
                 selectedR = s
@@ -58,10 +59,9 @@ def visualize():
         rdf2dot(j, stream, opts={display})
         dg = pydotplus.graph_from_dot_data(stream.getvalue())
         dg.write_svg("graph"+str(c)+".svg")
+        print("Graph saved")
         #once complete the graph is automatically opened in chrome
-
         url = str(pathlib.Path().absolute())+"/graph" +str(c) +".svg"
-
         webbrowser.register('chrome',
                         None,
                         webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
@@ -81,7 +81,7 @@ output.pack()
 button3 = Button(master, text="Select File", command=selectFile)
 button3.pack()
 
-button4 = Button(master, text="subject Number", command=subjectNumber)
+button4 = Button(master, text="Subject Number", command=subjectNumber)
 button4.pack()
 
 button = Button(master, text="Graph Data", command=visualize)
